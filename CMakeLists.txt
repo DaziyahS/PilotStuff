@@ -1,5 +1,5 @@
 # create a new CMake project
-cmake_minimum_required(VERSION 3.13.0)
+cmake_minimum_required(VERSION 3.14.0)
 project(custom_folder_syntacts VERSION 1.0.0)# must be the name of the overarching folder
 
 # clone libraries in-place and build
