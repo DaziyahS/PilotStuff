@@ -26,7 +26,7 @@ set(SYNTACTS_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 FetchContent_Declare(syntacts GIT_REPOSITORY https://github.com/mahilab/Syntacts.git) 
 FetchContent_MakeAvailable(syntacts)
 
-# create an executable from main.cpp and link it to wanted libraries
+# create an executable from personal_gui.cpp and link it to wanted libraries
 add_executable(myGuiLyfe personal_gui.cpp)
 target_link_libraries(myGuiLyfe syntacts)
 target_link_libraries(myGuiLyfe mahi::util)
@@ -37,6 +37,18 @@ add_executable(myApp main.cpp)
 target_link_libraries(myApp syntacts)
 target_link_libraries(myApp mahi::util)
 target_link_libraries(myApp mahi::gui)
+
+# create an executable from pilot1_sequence.cpp and link it to wanted libraries
+add_executable(seq1 pilot1_sequence.cpp)
+target_link_libraries(seq1 syntacts)
+target_link_libraries(seq1 mahi::util)
+target_link_libraries(seq1 mahi::gui)
+
+# create an executable from pilot1_simultaneous.cpp and link it to wanted libraries
+add_executable(sim1 pilot1_simultaneous)
+target_link_libraries(sim1 syntacts)
+target_link_libraries(sim1 mahi::util)
+target_link_libraries(sim1 mahi::gui)
 
 # # create an executable from main.cpp and link it to wanted libraries
 # add_executable(notes notes_info.cpp)
