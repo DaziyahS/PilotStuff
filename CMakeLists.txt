@@ -45,7 +45,7 @@ target_link_libraries(seq1 mahi::util)
 target_link_libraries(seq1 mahi::gui)
 
 # create an executable from pilot1_simultaneous.cpp and link it to wanted libraries
-add_executable(sim1 pilot1_simultaneous)
+add_executable(sim1 pilot1_simultaneous.cpp)
 target_link_libraries(sim1 syntacts)
 target_link_libraries(sim1 mahi::util)
 target_link_libraries(sim1 mahi::gui)
