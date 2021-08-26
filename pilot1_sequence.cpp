@@ -40,7 +40,7 @@ public:
 
     // Define variables needed throughout the program
     // For creating the signal
-    std::vector<Signal> current_signal; // the signal that is previously inputted
+    Signal current_signal[3]; // the signal that is previously inputted
     Signal og_env = normall; // is based on my preference
     Signal env; // envelope adjustment
     double sigAmp; // amplitude adjustment
@@ -74,7 +74,9 @@ public:
             }
             
             // determine the current signal
-            current_signal = signal_list[item_current];
+            for (int n=0; n<3; ++n){
+                current_signal[n] = signal_list[item_current][n];
+            }
             
             ImGui::EndCombo();
         };
@@ -225,7 +227,6 @@ public:
                 // Putting together the final signal
                 finalSignal = sigAmp * env * current_signal;
                 
-
                 // Save the signal
                 fileLocal = "../../Library/seq1/" + sigName; // create file path for library
                 tact::Library::exportSignal(finalSignal, fileLocal); // export signal to library
