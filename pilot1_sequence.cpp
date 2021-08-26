@@ -1,5 +1,6 @@
 #include <Mahi/Gui.hpp>
 #include <Mahi/Util.hpp>
+#include <Mahi/Util/Logging/Log.hpp>
 #include <notes_info.hpp>
 #include <syntacts>
 #include <random>
@@ -49,6 +50,8 @@ public:
     // For saving the signal
     std::string sigName; // name for saved signal
     std::string fileLocal; // for storing the signal
+    // For saving records
+    int trial_num = 1;
     // For playing the signal
     Clock play_clock; // keeping track of time for non-blocking pauses
     bool play_once = false;    // for playing a cue one time
@@ -248,6 +251,28 @@ public:
             }
             ImGui::EndPopup();            
         }
+                ImGui::SameLine();
+        if(ImGui::Button("Log", buttonSize))
+        {
+            ImGui::OpenPopup("logging_things"); // open a popup and name it for calling
+            // This just needs its own space, no curlies for the if
+        }  
+        static char num[120]; // info holder 
+        if(ImGui::BeginPopup("logging_things")) // if clicked essentially
+        {
+            ImGui::Text("What are your notes: "); // precursor for me to understand
+            ImGui::InputText("##edit", num, IM_ARRAYSIZE(num)); // size wanted
+            if (ImGui::Button("Close"))
+            {
+                ImGui::CloseCurrentPopup();
+                // put things here for what should happen once closed or else it will run foreverrrr
+                std::string notes_taken(num); // gets rid of null characters
+                LOG(Info) << "Notes are: " + notes_taken + " for the " << item_current << " chord with a hold of " << sus << " and amplitude of " << amp << "."; // now log this information
+                trial_num++;
+            }
+            ImGui::EndPopup();            
+        }
+
 
         ImGui::End();
 
