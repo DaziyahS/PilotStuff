@@ -45,7 +45,7 @@ public:
     Signal env; // envelope adjustment
     double sigAmp; // amplitude adjustment
     Signal note1 = a_minor_n1[0], note2 = a_minor_n1[1], note3 = a_minor_n1[2]; // initialize notes based on first drop down
-    std::vector<Signal> finalSignal; // the signal for all adjustments at any time
+    Signal finalSignal[3]; // the signal for all adjustments at any time
     // For saving the signal
     std::string sigName; // name for saved signal
     std::string fileLocal; // for storing the signal
@@ -131,7 +131,10 @@ public:
             Signal note2_new = sigAmp * note2 * env;
             Signal note3_new = sigAmp * note3 * env;
             // creating the signal itself
-            finalSignal = {note1_new, note2_new, note3_new};
+            finalSignal[0] = note1_new;
+            finalSignal[1] = note2_new;
+            finalSignal[2] = note3_new;
+            // finalSignal = {note1_new, note2_new, note3_new};
             
             // replace the loop
             pause = 0;
@@ -163,7 +166,10 @@ public:
             Signal note2_new = sigAmp * note2 * env;
             Signal note3_new = sigAmp * note3 * env;
             // creating the signal itself
-            finalSignal = {note1_new, note2_new, note3_new};
+            finalSignal[0] = note1_new;
+            finalSignal[1] = note2_new;
+            finalSignal[2] = note3_new;
+            // finalSignal = {note1_new, note2_new, note3_new};
             
 
             start_loop = true;
@@ -176,7 +182,10 @@ public:
             Signal note2_new = sigAmp * note2 * env;
             Signal note3_new = sigAmp * note3 * env;
             // creating the signal itself
-            finalSignal = {note1_new, note2_new, note3_new};
+            finalSignal[0] = note1_new;
+            finalSignal[1] = note2_new;
+            finalSignal[2] = note3_new;
+            // finalSignal = {note1_new, note2_new, note3_new};
             
             // replace the loop
             pause = 0;
@@ -251,7 +260,10 @@ public:
                 Signal note2_new = sigAmp * note2 * env;
                 Signal note3_new = sigAmp * note3 * env;
                 // creating the signal itself
-                finalSignal = {note1_new, note2_new, note3_new};
+            finalSignal[0] = note1_new;
+            finalSignal[1] = note2_new;
+            finalSignal[2] = note3_new;
+            // finalSignal = {note1_new, note2_new, note3_new};
 
                 // Save the signal
                 fileLocal = "../../Library/sim1/" + sigName; // create file path for library
