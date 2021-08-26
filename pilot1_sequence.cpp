@@ -267,7 +267,7 @@ public:
                 ImGui::CloseCurrentPopup();
                 // put things here for what should happen once closed or else it will run foreverrrr
                 std::string notes_taken(num); // gets rid of null characters
-                LOG(Info) << "Notes are: " + notes_taken + " for the " << item_current << " chord with a hold of " << sus << " and amplitude of " << amp << "."; // now log this information
+                LOG(Info) << "Notes for trial " << trial_num << " are: " + notes_taken + " for the " << item_current << " chord with a hold of " << sus << " and amplitude of " << amp << "."; // now log this information
                 trial_num++;
             }
             ImGui::EndPopup();            
