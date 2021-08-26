@@ -227,7 +227,7 @@ public:
                 
 
                 // Save the signal
-                fileLocal = "../../Library/" + sigName; // create file path for library
+                fileLocal = "../../Library/seq1/" + sigName; // create file path for library
                 tact::Library::exportSignal(finalSignal, fileLocal); // export signal to library
             }
             ImGui::EndPopup();            
