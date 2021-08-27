@@ -52,6 +52,7 @@ public:
     std::string fileLocal; // for storing the signal
     // For saving records
     int trial_num = 1;
+    int val = 0, arous = 0;
     // For playing the signal
     Clock play_clock; // keeping track of time for non-blocking pauses
     bool play_once = false;    // for playing a cue one time
@@ -262,12 +263,16 @@ public:
         {
             ImGui::Text("What are your notes: "); // precursor for me to understand
             ImGui::InputText("##edit", num, IM_ARRAYSIZE(num)); // size wanted
+            ImGui::InputInt("valence?", &val);
+            ImGui::SameLine();
+            ImGui::InputInt("arousal?", &arous);            
             if (ImGui::Button("Close"))
             {
                 ImGui::CloseCurrentPopup();
                 // put things here for what should happen once closed or else it will run foreverrrr
                 std::string notes_taken(num); // gets rid of null characters
-                LOG(Info) << "Notes for trial " << trial_num << " are: " + notes_taken + " for the " << item_current << " chord with a hold of " << sus << " and amplitude of " << amp << "."; // now log this information
+                // LOG(Info) << "Notes for trial " << trial_num << " are: " + notes_taken + " for the " << item_current << " chord with a hold of " << sus << " and amplitude of " << amp << "."; // now log this information
+                LOG(Info) << "sequence," << trial_num << "," << item_current << "," << sus << "," << amp << "," << val << "," << arous << "," + notes_taken;
                 trial_num++;
             }
             ImGui::EndPopup();            

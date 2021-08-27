@@ -16,6 +16,9 @@ using tact::Signal;
 using tact::sleep;
 using tact::Sequence;
 
+// logger number initialization
+enum { DataLog = 1 };
+
 // deteremine application variables
 int windowWidth = 1800; // 1920 x 1080 is screen dimensions
 int windowHeight = 1000;
@@ -53,6 +56,9 @@ public:
     std::string fileLocal; // for storing the signal
     // For logging the signal
     int trial_num = 1;
+    // RollingFileWriter<TxtFormatter> file_writer("data_for_csv.txt"); // create the writer for the log
+    // init_logger<DataLog>(Verbose, &file_writer); // create the logger
+    int val, arous;
     // For playing the signal
     Clock play_clock; // keeping track of time for non-blocking pauses
     bool play_once = false;    // for playing a cue one time
@@ -274,12 +280,17 @@ public:
         {
             ImGui::Text("What are your notes: "); // precursor for me to understand
             ImGui::InputText("##edit", num, IM_ARRAYSIZE(num)); // size wanted
+            ImGui::InputInt("valence?", &val);
+            ImGui::SameLine;
+            ImGui::InputInt("arousal?", &arous);
             if (ImGui::Button("Close"))
             {
                 ImGui::CloseCurrentPopup();
                 // put things here for what should happen once closed or else it will run foreverrrr
                 std::string notes_taken(num); // gets rid of null characters
-                LOG(Info) << "Notes for trial " << trial_num << " are: " + notes_taken + " for the " << item_current << " chord with a hold of " << sus << " and amplitude of " << amp << "."; // now log this information
+                // LOG(Info) << "Notes for trial " << trial_num << " are: " + notes_taken + " for the " << item_current << " chord with a hold of " << sus << " and amplitude of " << amp << "."; // now log this information
+                LOG(Info) << "simultaneous," << trial_num << "," << item_current << "," << sus << "," << amp << "," << val << "," << arous << "," + notes_taken;
+                // LOG_(DataLog, Info) << "simultaneous," << trial_num << "," << item_current << "," << sus << "," << amp << "," << val << "," << arous;
                 trial_num++;
             }
             ImGui::EndPopup();            
