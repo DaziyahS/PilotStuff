@@ -12,11 +12,6 @@
 // Declare function first
 tact::Sequence combineSignals(int numberOfSignals, tact::Signal oscillatorsDesired[], tact::Signal envelopesDesired[], double amplitudesDesired[]);
 
-// You usually include hpp, cpp typically implements functions you have in hpp file
-// The definitions in general are in hpp files (functions, variables, yada)
-tact::Signal a_note1 = tact::Sine(55.00);
-tact::Signal b_note1 = tact::Sine(61.74);
-
 // std::vector<tact::Signal> a_notes = {a_note1, a_note2}
 // a_notes[0]
 // a_notes[1]
@@ -26,6 +21,12 @@ tact::Signal b_note1 = tact::Sine(61.74);
 //       s1.play(a_notes[i])
 //       }
 // }
+
+// You usually include hpp, cpp typically implements functions you have in hpp file
+// The definitions in general are in hpp files (functions, variables, yada)
+tact::Signal a_note1 = tact::Sine(55.00);
+tact::Signal a_snote1 = tact::Sine(58.27); // a sharp and b flat
+tact::Signal b_note1 = tact::Sine(61.74);
 
 tact::Signal c_note2 = tact::Sine(65.41);
 tact::Signal c_snote2 = tact::Sine(69.30); // c sharp and d flat
@@ -51,14 +52,25 @@ tact::Signal hold = tact::ASR(0.1, 0.8, 0.2); // total time 1.1 s
 
 // Define vectors for chords;
 std::vector<tact::Signal> a_minor_n1 = {a_note1, c_note2, e_note2};
+std::vector<tact::Signal> a_major_n1 = {a_note1, c_snote2, e_note2};
+std::vector<tact::Signal> b_minor_n1 = {b_note1, d_snote2, f_snote2};
+std::vector<tact::Signal> b_major_n1 = {b_note1, d_note2, f_snote2};
+
+std::vector<tact::Signal> c_minor_n2 = {c_note2, d_snote2, g_note2};
 std::vector<tact::Signal> c_major_n2 = {c_note2, e_note2, g_note2};
 std::vector<tact::Signal> d_minor_n2 = {d_note2, g_note2, a_note2};
+std::vector<tact::Signal> d_major_n2 = {d_note2, f_snote2, a_note2};
 std::vector<tact::Signal> e_minor_n2 = {e_note2, g_note2, b_note2};
+std::vector<tact::Signal> e_major_n2 = {e_note2, g_snote2, b_note2};
+std::vector<tact::Signal> f_minor_n2 = {f_note2, g_snote2, c_note3};
 std::vector<tact::Signal> f_major_n2 = {f_note2, a_note2, c_note3};
+std::vector<tact::Signal> g_minor_n2 = {g_note2, a_snote2, d_note3};
 std::vector<tact::Signal> g_major_n2 = {g_note2, b_note2, d_note3};
 
 // Define the vector list for chords
-std::vector<std::vector<tact::Signal>> signal_list = {a_minor_n1, c_major_n2, d_minor_n2, e_minor_n2, f_major_n2, g_major_n2};
+std::vector<std::vector<tact::Signal>> signal_list = {a_minor_n1, a_major_n1, b_minor_n1, b_major_n1, c_minor_n2, c_major_n2,
+                                                      d_minor_n2, d_major_n2, e_minor_n2, e_major_n2, f_minor_n2, f_major_n2,
+                                                      g_minor_n2, g_major_n2};
 
 // Creating a function to make signals, assumes that all inputs are vectors and that all parameters
 // in a vector will be utilized
