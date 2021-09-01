@@ -28,14 +28,20 @@ tact::Signal b_note1 = tact::Sine(61.74);
 // }
 
 tact::Signal c_note2 = tact::Sine(65.41);
-tact::Signal d_note2 = tact::Sine(73.42);
+tact::Signal c_snote2 = tact::Sine(69.30); // c sharp and d flat
+tact::Signal d_note2 = tact::Sine(73.42); 
+tact::Signal d_snote2 = tact::Sine(77.78); // d sharp and e flat
 tact::Signal e_note2 = tact::Sine(82.41);
 tact::Signal f_note2 = tact::Sine(87.31);
+tact::Signal f_snote2 = tact::Sine(92.50); // f sharp and g flat
 tact::Signal g_note2 = tact::Sine(98.00);
+tact::Signal g_snote2 = tact::Sine(103.83); // g sharp and a flat
 tact::Signal a_note2 = tact::Sine(110.00);
+tact::Signal a_snote2 = tact::Sine(116.54); // a sharp and b flat
 tact::Signal b_note2 = tact::Sine(123.47);
 
 tact::Signal c_note3 = tact::Sine(130.81);
+tact::Signal c_snote3 = tact::Sine(138.59); // c sharp and d flat
 tact::Signal d_note3 = tact::Sine(146.83);
 
 // Define tact::signal lengths
