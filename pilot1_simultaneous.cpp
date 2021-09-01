@@ -24,8 +24,8 @@ int windowWidth = 1800; // 1920 x 1080 is screen dimensions
 int windowHeight = 1000;
 std::string my_title= "Play GUI";
 ImVec2 buttonSize = ImVec2(400, 65);  // Size of buttons on GUI
-std::string deviceNdx = "Speakers (USB Sound Device)"; // Put my device name or number
-
+// std::string deviceNdx = "Speakers (USB Sound Device)"; // Put my device name or number
+int deviceNdx = 6;
 class MyGui : public Application
 {
     // Start by declaring the session variable
@@ -34,7 +34,7 @@ class MyGui : public Application
 public:
     // this is a constructor. It initializes your class to a specific state
     MyGui() : Application(windowWidth, windowHeight, my_title, 0) {
-        s.open(deviceNdx, tact::API::MME); // opens session with the application
+        s.open(deviceNdx); //, tact::API::MME); // opens session with the application
         // keep in mind, if use device name must also use the API
 
         // something the GUI needs *shrugs*
@@ -46,8 +46,8 @@ public:
     // For creating the signal
     std::vector<Signal> current_signal; // the signal that is previously inputted
     Signal og_env = normall; // is based on my preference
-    Signal env; // envelope adjustment
-    double sigAmp; // amplitude adjustment
+    Signal env = og_env; // envelope adjustment
+    double sigAmp = 1; // amplitude adjustment
     Signal note1 = a_minor_n1[0], note2 = a_minor_n1[1], note3 = a_minor_n1[2]; // initialize notes based on first drop down
     Signal note1_new, note2_new, note3_new; // declaring the new version of notes
     tact::Sequence finalSignal; // the signal for all adjustments at any time
@@ -218,8 +218,10 @@ public:
             s.play(1,note2_new);
             s.play(2,note3_new);
             if(play_clock.get_elapsed_time().as_seconds() > note1_new.length()){ // if whole signal is played
-                play_once = false; // set bool to false
+                /*play_once = false; // set bool to false
                 start_loop = false;
+                s.stopAll();*/
+                pause  = 1;
             }
         }
         // Play the signal repeatedly
@@ -281,7 +283,7 @@ public:
             ImGui::Text("What are your notes: "); // precursor for me to understand
             ImGui::InputText("##edit", num, IM_ARRAYSIZE(num)); // size wanted
             ImGui::InputInt("valence?", &val);
-            ImGui::SameLine;
+            ImGui::SameLine();
             ImGui::InputInt("arousal?", &arous);
             if (ImGui::Button("Close"))
             {

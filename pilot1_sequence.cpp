@@ -21,7 +21,8 @@ int windowWidth = 1800; // 1920 x 1080 is screen dimensions
 int windowHeight = 1000;
 std::string my_title= "Play GUI";
 ImVec2 buttonSize = ImVec2(400, 65);  // Size of buttons on GUI
-std::string deviceNdx = "Speakers (USB Sound Device)"; // Put my device name or number
+// std::string deviceNdx = "Speakers (USB Sound Device)"; // Put my device name or number, is for at home name
+int deviceNdx = 6;
 
 class MyGui : public Application
 {
@@ -31,7 +32,7 @@ class MyGui : public Application
 public:
     // this is a constructor. It initializes your class to a specific state
     MyGui() : Application(windowWidth, windowHeight, my_title, 0) {
-        s.open(deviceNdx, tact::API::MME); // opens session with the application
+        s.open(deviceNdx); // , tact::API::MME); // opens session with the application
         // keep in mind, if use device name must also use the API
 
         // something the GUI needs *shrugs*
@@ -43,8 +44,8 @@ public:
     // For creating the signal
     std::vector<Signal> current_signal; // the signal that is previously inputted
     Signal og_env = normall; // is based on my preference
-    Signal env; // envelope adjustment
-    double sigAmp; // amplitude adjustment
+    Signal env = og_env; // envelope adjustment
+    double sigAmp =1; // amplitude adjustment
     Signal note1 = a_minor_n1[0], note2 = a_minor_n1[1], note3 = a_minor_n1[2]; // initialize notes based on first drop down
     tact::Sequence finalSignal; // the signal for all adjustments at any time
     // For saving the signal
@@ -107,7 +108,7 @@ public:
         if(ImGui::SliderInt("Intensity", &amp, 0, 3)){
             switch (amp)
             {
-                    case 1: // medium-high amplitude
+                case 1: // medium-high amplitude
                     sigAmp = 0.8;
                     break;
                 case 2: // high amplitude
@@ -206,6 +207,7 @@ public:
             if(play_clock.get_elapsed_time().as_seconds() > finalSignal.length()){ // if whole signal is played
                 play_once = false; // set bool to false
                 start_loop = false;
+                pause = 1;
             }
         }
         // Play the signal repeatedly
