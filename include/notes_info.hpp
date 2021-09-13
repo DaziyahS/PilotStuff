@@ -53,12 +53,12 @@ tact::Signal hold = tact::ASR(0.1, 0.8, 0.2); // total time 1.1 s
 // Define vectors for chords;
 std::vector<tact::Signal> a_minor_n1 = {a_note1, c_note2, e_note2};
 std::vector<tact::Signal> a_major_n1 = {a_note1, c_snote2, e_note2};
-std::vector<tact::Signal> b_minor_n1 = {b_note1, d_snote2, f_snote2};
-std::vector<tact::Signal> b_major_n1 = {b_note1, d_note2, f_snote2};
+std::vector<tact::Signal> b_minor_n1 = {b_note1, d_note2, f_snote2};
+std::vector<tact::Signal> b_major_n1 = {b_note1, d_snote2, f_snote2};
 
 std::vector<tact::Signal> c_minor_n2 = {c_note2, d_snote2, g_note2};
 std::vector<tact::Signal> c_major_n2 = {c_note2, e_note2, g_note2};
-std::vector<tact::Signal> d_minor_n2 = {d_note2, g_note2, a_note2};
+std::vector<tact::Signal> d_minor_n2 = {d_note2, f_note2, a_note2};
 std::vector<tact::Signal> d_major_n2 = {d_note2, f_snote2, a_note2};
 std::vector<tact::Signal> e_minor_n2 = {e_note2, g_note2, b_note2};
 std::vector<tact::Signal> e_major_n2 = {e_note2, g_snote2, b_note2};
