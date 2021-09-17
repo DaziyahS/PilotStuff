@@ -49,6 +49,12 @@ target_link_libraries(sim1 syntacts)
 target_link_libraries(sim1 mahi::util)
 target_link_libraries(sim1 mahi::gui)
 
+# create an executable from pilot2_twosignals.cpp and link it to wanted libraries
+add_executable(twosig pilot2_twosignals.cpp)
+target_link_libraries(twosig syntacts)
+target_link_libraries(twosig mahi::util)
+target_link_libraries(twosig mahi::gui)
+
 # # create an executable from main.cpp and link it to wanted libraries
 # add_executable(notes notes_info.cpp)
 # target_link_libraries(notes syntacts)
