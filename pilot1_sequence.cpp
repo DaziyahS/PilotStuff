@@ -147,7 +147,9 @@ public:
             play_clock.restart();
 
             // Play the signal
-            s.playAll(finalSignal); // play has (channel, signal)
+            s.play(1,finalSignal); // play has (channel, signal)
+            s.play(2,finalSignal); 
+            s.play(3,finalSignal); 
             // sleep(finalSignal.length()); // sleep makes sure you cannot play another cue before that cue is done (in theory)
             // sleep is a blocking function
 
@@ -190,7 +192,9 @@ public:
             play_clock.restart();
 
             // Play the signal
-            s.playAll(finalSignal); // play has (channel, signal)
+            s.play(1,finalSignal); // play has (channel, signal)
+            s.play(2,finalSignal); 
+            s.play(3,finalSignal);
             // sleep(finalSignal.length()); // sleep makes sure you cannot play another cue before that cue is done (in theory)
             // sleep is a blocking function
         }; 
@@ -205,7 +209,9 @@ public:
         // Play the signal once
         if (play_once)
         {
-            s.playAll(finalSignal); // play on all channels
+            s.play(1,finalSignal); // play has (channel, signal)
+            s.play(2,finalSignal); 
+            s.play(3,finalSignal);
             if(play_clock.get_elapsed_time().as_seconds() > finalSignal.length()){ // if whole signal is played
                 play_once = false; // set bool to false
                 start_loop = false;
@@ -215,7 +221,9 @@ public:
         // Play the signal repeatedly
         else if ((play_clock.get_elapsed_time().as_seconds() > finalSignal.length() && pause == 0) || start_loop)
         { // if pause has not been pressed and is time to restart signal
-            s.playAll(finalSignal); // on all channels
+            s.play(1,finalSignal); // play has (channel, signal)
+            s.play(2,finalSignal); 
+            s.play(3,finalSignal);
             play_clock.restart(); // attempting a non-blocking version of sleep, reset the counter
         }
 

@@ -153,9 +153,9 @@ public:
             play_clock.restart();
 
             // Play the signal
-            s.play(0,note1_new);
-            s.play(1,note2_new);
-            s.play(2,note3_new);
+            s.play(1,note1_new);
+            s.play(2,note2_new);
+            s.play(3,note3_new);
             // s.playAll(finalSignal); // play has (channel, signal)
             // sleep(finalSignal.length()); // sleep makes sure you cannot play another cue before that cue is done (in theory)
             // sleep is a blocking function
@@ -198,9 +198,9 @@ public:
             play_clock.restart();
 
             // Play the signal
-            s.play(0,note1_new);
-            s.play(1,note2_new);
-            s.play(2,note3_new);
+            s.play(1,note1_new);
+            s.play(2,note2_new);
+            s.play(3,note3_new);
             // sleep(finalSignal.length()); // sleep makes sure you cannot play another cue before that cue is done (in theory)
             // sleep is a blocking function
         }; 
@@ -216,9 +216,9 @@ public:
         if (play_once)
         {
             // Play the signal
-            s.play(0,note1_new);
-            s.play(1,note2_new);
-            s.play(2,note3_new);
+            s.play(1,note1_new);
+            s.play(2,note2_new);
+            s.play(3,note3_new);
             if(play_clock.get_elapsed_time().as_seconds() > note1_new.length()){ // if whole signal is played
                 /*play_once = false; // set bool to false
                 start_loop = false;
@@ -230,9 +230,9 @@ public:
         else if ((play_clock.get_elapsed_time().as_seconds() > note1_new.length() && pause == 0) || start_loop)
         { // if pause has not been pressed and is time to restart signal
             // Play the signal
-            s.play(0,note1_new);
-            s.play(1,note2_new);
-            s.play(2,note3_new);
+            s.play(1,note1_new);
+            s.play(2,note2_new);
+            s.play(3,note3_new);
             play_clock.restart(); // attempting a non-blocking version of sleep, reset the counter
         }
 
