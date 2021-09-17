@@ -45,7 +45,7 @@ public:
     // Define variables needed throughout the program
     // For creating the signal
     std::vector<Signal> current_signal; // the signal that is previously inputted
-    Signal og_env = normall; // is based on my preference
+    Signal og_env = normall_sim; // is based on my preference
     Signal env = og_env; // envelope adjustment
     double sigAmp = 1; // amplitude adjustment
     Signal note1 = a_minor_n1[0], note2 = a_minor_n1[1], note3 = a_minor_n1[2]; // initialize notes based on first drop down
@@ -98,13 +98,13 @@ public:
             switch (sus)
             {
                 case 0: // sharp
-                    env = sharp;
+                    env = sharp_sim;
                     break;
                 case 1: // normal
-                    env = normall;
+                    env = normall_sim;
                     break;
                 case 2: // hold
-                    env = hold;
+                    env = hold_sim;
                     break;
                 default: // no change
                     env = og_env; // this technically should not really exist as an option
