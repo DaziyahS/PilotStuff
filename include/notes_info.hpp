@@ -50,6 +50,10 @@ tact::Signal sharp = tact::ASR(0, 0.3, 0); // total time 0.3
 tact::Signal normall = tact::ASR(0.1, 0.5, 0.1); // total time 0.7s
 tact::Signal hold = tact::ASR(0.1, 0.8, 0.2); // total time 1.1 s
 
+tact::Signal sharp_sim = tact::ASR(0, 0.9, 0); // total time 0.3
+tact::Signal normall_sim = tact::ASR(0.3, 1.5, 0.3); // total time 0.7s
+tact::Signal hold_sim = tact::ASR(0.3, 2.4, 0.6); // total time 1.1 s
+
 // Define vectors for chords;
 std::vector<tact::Signal> a_minor_n1 = {a_note1, c_note2, e_note2};
 std::vector<tact::Signal> a_major_n1 = {a_note1, c_snote2, e_note2};
