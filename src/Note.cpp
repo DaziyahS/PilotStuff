@@ -4,9 +4,11 @@
 // Note struct declaration
 Note::Note(int name, double amplitude, tact::Signal envelope)
 {
+    // assign values given to a variable
     name_ = name;
     amplitude_ = amplitude;
     envelope_ = envelope;
+    // define other needed variables for internal functions
     tact::Signal signal;
 
     // determine the sine wave
