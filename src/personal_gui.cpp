@@ -33,6 +33,11 @@ public:
         s.open(deviceNdx, tact::API::MME); // opens session with the application
         // keep in mind, if use device name must also use the API
 
+        // Initializing values that require constructors
+        sigAmp = std::vector(3,1.0);
+        env = std::vector(3, og_env);
+
+
         // something the GUI needs *shrugs*
         ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_ViewportsEnable;
         set_background(Cyans::Teal); //background_color = Grays::Black; 
@@ -42,8 +47,8 @@ public:
     // For creating the signal
     std::vector<Signal> current_signal; // the signal that is previously inputted
     Signal og_env = normall; // is based on my preference
-    Signal env; // envelope adjustment
-    double sigAmp; // amplitude adjustment
+    std::vector<Signal> env; // envelope adjustment, defined as OGs in the constructor
+    std::vector<double> sigAmp; // amplitude adjustment, defined as 1s in the constructor
     Signal note1 = a_minor_n1[0], note2 = a_minor_n1[1], note3 = a_minor_n1[2]; // initialize notes based on first drop down
     tact::Sequence finalSignal; // the signal for all adjustments at any time
     // For saving the signal
@@ -72,50 +77,65 @@ public:
                 if (is_selected)
                     ImGui::SetItemDefaultFocus(); // focuses on item selected, item_current is set as selected
             }
-
+            
             // determine the current signal
             current_signal = signal_list[item_current];
 
+            // determine the notes contained
+            // NOTE: PAY ATTENTION TO INDEXING --> STARTS AT 0!!!
+            note1 = current_signal[0];
+            note2 = current_signal[1];
+            note3 = current_signal[2];
+            
             ImGui::EndCombo();
         };
-
+        
         // for sustain and delay
-        static int sus = 0; // I think this is the vector being adjusted
-        if(ImGui::SliderInt("Sustain", &sus, 0, 2)){  // if use SliderInt2 will have 2 back to back same range
-            // Set the envelope value based on selection
-            switch (sus)
+        static int sus [3] = {0, 0, 0}; // I think this is the vector being adjusted
+        if(ImGui::SliderInt3("Sustain", sus, 0, 3)){  // if use SliderInt2 will have 2 back to back same range
+            // see how to call the displayed value
+            
+            // need to have a way to determine the OG value possibly?
+            for(int n = 0; n < 3; n++)
             {
-                case 0: // sharp
-                    env = sharp;
-                    break;
-                case 1: // normal
-                    env = normall;
-                    break;
-                case 2: // hold
-                    env = hold;
-                    break;
-                default: // no change
-                    env = og_env; // this technically should not really exist as an option
-                    break;
+                 switch (sus[n])
+                {
+                   case 1: // sharp
+                        env[n] = sharp;
+                        break;
+                    case 2: // normal
+                        env[n] = normall;
+                        break;
+                    case 3: // hold
+                        env[n] = hold;
+                        break;
+                    default: // no change
+                        env[n] = og_env;
+                        break;
+                }
             }
         }; 
-        static int amp = 0; // The value to be adjusted
-        if(ImGui::SliderInt("Intensity", &amp, 0, 3)){
-            switch (amp)
-            {
-                    case 1: // medium-high amplitude
-                    sigAmp = 0.8;
-                    break;
-                case 2: // high amplitude
-                    sigAmp = 0.5;
-                    break;
-                case 3: // low amplitude
-                    sigAmp = 0.3;
-                    break;
-
-                default: // full amplitude
-                    sigAmp = 1;
-                    break;
+        static int amp [3] = {0, 0, 0}; // The vector to be adjusted
+        if(ImGui::SliderInt3("Intensity", amp, 0, 3)){
+            // need to have a way to determine the OG value possibly?
+            for(int n = 0; n < 3; n++)
+            { 
+                switch (amp[n])
+                {
+                     case 1: // medium-high amplitude
+                        sigAmp[n] = 0.8;
+                        break;
+                    case 2: // high amplitude
+                        sigAmp[n] = 0.5;
+                        break;
+                    case 3: // low amplitude
+                        sigAmp[n] = 0.3;
+                        break;
+                    
+                    default: // full amplitude
+                        sigAmp[n] = 1;
+                        break;
+                }
             }
         };
         /* // if I just want it to be an arrow down and would go before it
@@ -126,12 +146,13 @@ public:
         // for play, loop, pause, save
         if(ImGui::Button("Play", buttonSize)){
             // Putting together the final signal
-            Signal note1_new = sigAmp * note1 * env;
-            Signal note2_new = sigAmp * note2 * env;
-            Signal note3_new = sigAmp * note3 * env;
+            // initializing the notes themselves
+            Signal note1_new = sigAmp[0] * note1 * env[0];
+            Signal note2_new = sigAmp[1] * note2 * env[1];
+            Signal note3_new = sigAmp[2] * note3 * env[2];
             // creating the signal itself
             finalSignal = note1_new << note2_new << note3_new;
-
+            
             // replace the loop
             pause = 0;
             play_once = true;
@@ -155,12 +176,12 @@ public:
             pause = 0;
 
             // Putting together the final signal
-            Signal note1_new = sigAmp * note1 * env;
-            Signal note2_new = sigAmp * note2 * env;
-            Signal note3_new = sigAmp * note3 * env;
+            // initializing the notes themselves
+            Signal note1_new = sigAmp[0] * note1 * env[0];
+            Signal note2_new = sigAmp[1] * note2 * env[1];
+            Signal note3_new = sigAmp[2] * note3 * env[2];
             // creating the signal itself
             finalSignal = note1_new << note2_new << note3_new;
-
 
             std::cout << "Pause value is " << pause << std::endl;
             std::cout << finalSignal.length() << " s for playing" << std::endl;
@@ -169,12 +190,13 @@ public:
         ImGui::SameLine();
         if(ImGui::Button("Reverse", buttonSize)){ // You may want to create a popup with repeat option
             // Putting together the final signal
-            Signal note1_new = sigAmp * note1 * env;
-            Signal note2_new = sigAmp * note2 * env;
-            Signal note3_new = sigAmp * note3 * env;
+            // initializing the notes themselves
+            Signal note1_new = sigAmp[2] * note1 * env[2];
+            Signal note2_new = sigAmp[1] * note2 * env[1];
+            Signal note3_new = sigAmp[0] * note3 * env[0];
             // creating the signal itself
             finalSignal = note1_new << note2_new << note3_new;
-
+            
             // replace the loop
             pause = 0;
             play_once = true;
@@ -187,7 +209,7 @@ public:
             // sleep(finalSignal.length()); // sleep makes sure you cannot play another cue before that cue is done (in theory)
             // sleep is a blocking function
         }; 
-
+        
         // Stop the signal with pause loop
         if (pause == 1 || !start_loop){
             s.stopAll(); // stop all channels playing
@@ -235,12 +257,13 @@ public:
                 std::cout << sigName << std::endl;
 
                 // Putting together the final signal
-                Signal note1_new = sigAmp * note1 * env;
-                Signal note2_new = sigAmp * note2 * env;
-                Signal note3_new = sigAmp * note3 * env;
+                // **** Might Want To Create A Function For This ****
+                // initializing the notes themselves
+                Signal note1_new = sigAmp[0] * note1 * env[0];
+                Signal note2_new = sigAmp[1] * note2 * env[1];
+                Signal note3_new = sigAmp[2] * note3 * env[2];
                 // creating the signal itself
                 finalSignal = note1_new << note2_new << note3_new;
-
 
                 // Save the signal
                 fileLocal = "../../Library/" + sigName; // create file path for library
@@ -250,7 +273,7 @@ public:
         }
 
         ImGui::End();
-
+        
     }
 };
 
@@ -259,4 +282,4 @@ int main() {
     MyGui my_gui;
     my_gui.run();
     return 0;
-} 
+}
