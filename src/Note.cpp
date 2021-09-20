@@ -2,7 +2,7 @@
 #include "Note.hpp"
 
 // Note struct declaration
-Note::Note(int name, double amplitude, tact::Signal envelope);
+Note::Note(int name, double amplitude, tact::Signal envelope)
 {
     name_ = name;
     amplitude_ = amplitude;
@@ -13,7 +13,7 @@ Note::Note(int name, double amplitude, tact::Signal envelope);
     switch(name_)
     {
         case 1:
-            signal = tact::Sine(a_note1 );
+            signal = tact::Sine(a_note1);
             break;
         case 2:
             signal = tact::Sine(a_snote1);
