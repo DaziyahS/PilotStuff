@@ -15,7 +15,7 @@ struct Note
         // function to generate the wanted signal
         tact::Signal getSignal() // function no inputs
         {
-            return signal_ * envelope_;
+            return signal_ * amplitude_ * envelope_;
         }
 
         // declare public variables

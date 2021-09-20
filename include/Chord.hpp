@@ -12,16 +12,19 @@ struct Chord
 {
     public:
         // declare the constructor for the chord
-        Chord(std::string name, int duration, int amplitude, bool isSimultaneous, bool isMajor);
+        Chord(std::string name, int duration, int amplitude, bool isSimultaneous);
 
         // declare public variables
-        std::vector<int> notes_;
         std::string name_; // name of the note
         int duration_;
         int amplitude_;
         bool isSimultaneous_; // holds info of which type of sequence
-        bool isMajor_; // if 1 then it is major
+        // variables needed for internal functions
+        std::vector<Note> notes_;
         tact::Signal envelope;
+        double sigAmp;
+        bool isMajor_; // if 1 then it is major
+ 
 
     private:
         // define the chords based on numbers and whether it is major
