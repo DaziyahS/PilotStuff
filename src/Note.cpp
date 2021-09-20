@@ -66,7 +66,7 @@ Note::Note(int name, double amplitude, tact::Signal envelope)
             signal = tact::Sine(c_snote3);
             break;
         case 20:
-            signal = tact::Sine((d_note3);
+            signal = tact::Sine(d_note3);
             break;
     }
 }
