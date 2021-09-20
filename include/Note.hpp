@@ -42,5 +42,4 @@ struct Note
         double c_note3 = 130.8;
         double c_snote3 = 138.5; // c sharp and d flat
         double d_note3 = 146.8;
-
 };
