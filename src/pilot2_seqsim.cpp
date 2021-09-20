@@ -1,13 +1,17 @@
 #include <Mahi/Gui.hpp>
 #include <Mahi/Util.hpp>
 #include <Mahi/Util/Logging/Log.hpp>
-#include <notes_info.hpp>
 #include <syntacts>
 #include <random>
 #include <iostream> 
 #include <fstream> // need to include inorder to save to csv
 #include <chrono> 
 #include <string> // for manipulating file name
+
+// local includes
+#include <Chord.hpp>
+#include <Note.hpp> // would this imply that the .cpp functionality is attached?
+// #include <notes_info.hpp> // probably do not need
 
 // open the namespaces that are relevant for this code
 using namespace mahi::gui;
@@ -22,7 +26,13 @@ int windowHeight = 1000;
 std::string my_title= "Play GUI";
 ImVec2 buttonSize = ImVec2(400, 65);  // Size of buttons on GUI
 // std::string deviceNdx = "Speakers (USB Sound Device)"; // Put my device name or number, is for at home name
-int deviceNdx = 6;
+int deviceNdx = 5;
+// tactors of interest
+int topTact = 4;
+int botTact = 6;
+int leftTact = 0;
+int rightTact = 2;
+
 
 class MyGui : public Application
 {
@@ -31,23 +41,25 @@ class MyGui : public Application
 
 public:
     // this is a constructor. It initializes your class to a specific state
-    MyGui() : Application(windowWidth, windowHeight, my_title, 0) {
+    MyGui() : 
+    Application(windowWidth, windowHeight, my_title, 0),
+    chordNew(),
+    channelSignals(3)
+    {
         s.open(deviceNdx); // , tact::API::MME); // opens session with the application
         // keep in mind, if use device name must also use the API
-
         // something the GUI needs *shrugs*
         ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_ViewportsEnable;
         set_background(Cyans::Teal); //background_color = Grays::Black; 
-    }
+     }
 
     // Define variables needed throughout the program
     // For creating the signal
-    std::vector<Signal> current_signal; // the signal that is previously inputted
-    Signal og_env = normall; // is based on my preference
-    Signal env = og_env; // envelope adjustment
-    double sigAmp =1; // amplitude adjustment
-    Signal note1 = a_minor_n1[0], note2 = a_minor_n1[1], note3 = a_minor_n1[2]; // initialize notes based on first drop down
-    tact::Sequence finalSignal; // the signal for all adjustments at any time
+    std::string defaultName = "a_minor_n1"; // what is the first chord name
+    std::string currentChord; // holds name of current chord based on selection
+    Chord chordNew;
+    std::vector<tact::Signal> channelSignals;
+    bool isSim = false; // default is sequential
     // For saving the signal
     std::string sigName; // name for saved signal
     std::string fileLocal; // for storing the signal
@@ -81,7 +93,7 @@ public:
             }
 
             // determine the current signal
-            current_signal = signal_list[item_current];
+            currentChord = chordNew.signal_list[item_current]; // theoretically gives name needed
 
             ImGui::EndCombo();
         };
@@ -89,55 +101,29 @@ public:
         // for sustain and delay
         static int sus = 0; // I think this is the vector being adjusted
         if(ImGui::SliderInt("Sustain", &sus, 0, 2)){  // if use SliderInt2 will have 2 back to back same range
-            // Set the envelope value based on selection
-            switch (sus)
-            {
-                case 0: // sharp
-                    env = sharp;
-                    break;
-                case 1: // normal
-                    env = normall;
-                    break;
-                case 2: // hold
-                    env = hold;
-                    break;
-                default: // no change
-                    env = og_env; // this technically should not really exist as an option
-                    break;
-            }
+            // sus is determined here, this is duration value
+            std::cout << "sustain is " << sus << std::endl;
         }; 
         static int amp = 0; // The value to be adjusted
         if(ImGui::SliderInt("Intensity", &amp, 0, 3)){
-            switch (amp)
-            {
-                case 1: // medium-high amplitude
-                    sigAmp = 0.8;
-                    break;
-                case 2: // high amplitude
-                    sigAmp = 0.5;
-                    break;
-                case 3: // low amplitude
-                    sigAmp = 0.3;
-                    break;
-
-                default: // full amplitude
-                    sigAmp = 1;
-                    break;
-            }
+            // amp is determined here, this is amplitude value
         };
         /* // if I just want it to be an arrow down and would go before it
         if (ImGui::CheckboxFlags("ImGuiComboFlags_NoPreview", &flags, ImGuiComboFlags_NoPreview))
                 flags &= ~ImGuiComboFlags_NoArrowButton; // Clear the other flag, as we cannot combine both
         */
+        if(ImGui::Button("Sequential", buttonSize)){
+            isSim = 0; // false
+        };
+        ImGui::SameLine();
+        if(ImGui::Button("Simultaneous", buttonSize)){
+            isSim = 1; // true
+        };
 
         // for play, loop, pause, save
         if(ImGui::Button("Play", buttonSize)){
-            // Putting together the final signal
-            Signal note1_new = sigAmp * note1 * env;
-            Signal note2_new = sigAmp * note2 * env;
-            Signal note3_new = sigAmp * note3 * env;
-            // creating the signal itself
-            finalSignal = note1_new << note2_new << note3_new;
+            chordNew = Chord(currentChord, sus, amp, isSim);
+            channelSignals = chordNew.playValues(); // get the values of the signal
 
             // replace the loop
             pause = 0;
@@ -147,42 +133,36 @@ public:
             play_clock.restart();
 
             // Play the signal
-            s.play(1,finalSignal); // play has (channel, signal)
-            s.play(2,finalSignal); 
-            s.play(3,finalSignal); 
+            s.play(leftTact, channelSignals[0]); // play has (channel, signal)
+            s.play(botTact, channelSignals[1]); 
+            s.play(rightTact, channelSignals[2]); 
             // sleep(finalSignal.length()); // sleep makes sure you cannot play another cue before that cue is done (in theory)
             // sleep is a blocking function
 
-            std::cout << finalSignal.length() << " s for playing" << std::endl;
+            std::cout << channelSignals[0].length() << " s for playing" << std::endl;
             }; 
         ImGui::SameLine();
-
-        // include a bool for play
-
         if(ImGui::Button("Loop", buttonSize)){
             // Initialize the ability to repeat
             pause = 0;
 
-            // Putting together the final signal
-            Signal note1_new = sigAmp * note1 * env;
-            Signal note2_new = sigAmp * note2 * env;
-            Signal note3_new = sigAmp * note3 * env;
-            // creating the signal itself
-            finalSignal = note1_new << note2_new << note3_new;
-
+            // determine the signal
+            chordNew = Chord(currentChord, sus, amp, isSim);
+            channelSignals = chordNew.playValues(); // get the values of the signal
 
             std::cout << "Pause value is " << pause << std::endl;
-            std::cout << finalSignal.length() << " s for playing" << std::endl;
+            std::cout << channelSignals[0].length() << " s for playing" << std::endl;
             start_loop = true;
         }; 
-        ImGui::SameLine();
+        ImGui::SameLine();        
+        if(ImGui::Button("Pause", buttonSize)){
+                pause = 1;
+            }; 
+        /*
         if(ImGui::Button("Reverse", buttonSize)){ // You may want to create a popup with repeat option
-            // Putting together the final signal
-            Signal note1_new = sigAmp * note1 * env;
-            Signal note2_new = sigAmp * note2 * env;
-            Signal note3_new = sigAmp * note3 * env;
-            // creating the signal itself
-            finalSignal = note1_new << note2_new << note3_new;
+            chordNew(currentChord, sus, amp, isSim);
+            channelSignals = chordNew.playValues(); // get the values of the signal
+
 
             // replace the loop
             pause = 0;
@@ -192,12 +172,12 @@ public:
             play_clock.restart();
 
             // Play the signal
-            s.play(1,finalSignal); // play has (channel, signal)
-            s.play(2,finalSignal); 
-            s.play(3,finalSignal);
+            s.play(1, channelSignals[0]); // play has (channel, signal)
+            s.play(2, channelSignals[1]); 
+            s.play(3, channelSignals[2]); 
             // sleep(finalSignal.length()); // sleep makes sure you cannot play another cue before that cue is done (in theory)
             // sleep is a blocking function
-        }; 
+        }; */
 
         // Stop the signal with pause loop
         if (pause == 1 || !start_loop){
@@ -209,28 +189,26 @@ public:
         // Play the signal once
         if (play_once)
         {
-            s.play(1,finalSignal); // play has (channel, signal)
-            s.play(2,finalSignal); 
-            s.play(3,finalSignal);
-            if(play_clock.get_elapsed_time().as_seconds() > finalSignal.length()){ // if whole signal is played
+            // Play the signal
+            s.play(leftTact, channelSignals[0]); // play has (channel, signal)
+            s.play(botTact, channelSignals[1]); 
+            s.play(rightTact, channelSignals[2]); 
+            if(play_clock.get_elapsed_time().as_seconds() > channelSignals[0].length()){ // if whole signal is played
                 play_once = false; // set bool to false
                 start_loop = false;
                 pause = 1;
             }
         }
         // Play the signal repeatedly
-        else if ((play_clock.get_elapsed_time().as_seconds() > finalSignal.length() && pause == 0) || start_loop)
+        else if ((play_clock.get_elapsed_time().as_seconds() > channelSignals[0].length() && pause == 0) || start_loop)
         { // if pause has not been pressed and is time to restart signal
-            s.play(1,finalSignal); // play has (channel, signal)
-            s.play(2,finalSignal); 
-            s.play(3,finalSignal);
+            // Play the signal
+            s.play(leftTact, channelSignals[0]); // play has (channel, signal)
+            s.play(botTact, channelSignals[1]); 
+            s.play(rightTact, channelSignals[2]); 
             play_clock.restart(); // attempting a non-blocking version of sleep, reset the counter
         }
 
-        if(ImGui::Button("Pause", buttonSize)){
-                pause = 1;
-            }; 
-        ImGui::SameLine();
         if(ImGui::Button("Save", buttonSize))
         {
             ImGui::OpenPopup("saving_things"); // open a popup and name it for calling
@@ -244,23 +222,25 @@ public:
             ImGui::InputText("##edit", buf, IM_ARRAYSIZE(buf), ImGuiInputTextFlags_CharsNoBlank); // no space allowed, size wanted
             if (ImGui::Button("Close"))
             {
+                if (isSim == false){
                 ImGui::CloseCurrentPopup();
                 // put things here for what should happen once closed or else it will run foreverrrr
                 std::string predone(buf); // gets rid of null characters
                 sigName = predone + ".sig"; // now set the name to what we want
                 std::cout << sigName << std::endl;
 
-                // Putting together the final signal
-                Signal note1_new = sigAmp * note1 * env;
-                Signal note2_new = sigAmp * note2 * env;
-                Signal note3_new = sigAmp * note3 * env;
-                // creating the signal itself
-                finalSignal = note1_new << note2_new << note3_new;
+                // determine the signal
+                chordNew = Chord(currentChord, sus, amp, isSim);
+                channelSignals = chordNew.playValues(); // get the values of the signal
 
 
                 // Save the signal
                 fileLocal = "../../Library/" + sigName; // create file path for library
-                tact::Library::exportSignal(finalSignal, fileLocal); // export signal to library
+                tact::Library::exportSignal(channelSignals[0], fileLocal); // export signal to library
+                }
+                else{
+                    // do nothing because cannot because simultaneous and all different
+                }
             }
             ImGui::EndPopup();            
         }
@@ -284,7 +264,7 @@ public:
                 // put things here for what should happen once closed or else it will run foreverrrr
                 std::string notes_taken(num); // gets rid of null characters
                 // LOG(Info) << "Notes for trial " << trial_num << " are: " + notes_taken + " for the " << item_current << " chord with a hold of " << sus << " and amplitude of " << amp << "."; // now log this information
-                LOG(Info) << "sequence," << trial_num << "," << item_current << "," << sus << "," << amp << "," << val << "," << arous << "," + notes_taken;
+                LOG(Info) << trial_num << "," << item_current << "," << sus << "," << amp << "," << val << "," << arous << "," + notes_taken;
                 trial_num++;
             }
             ImGui::EndPopup();            

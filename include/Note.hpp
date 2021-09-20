@@ -13,10 +13,7 @@ struct Note
         Note(int name, double amplitude, tact::Signal envelope);
 
         // function to generate the wanted signal
-        tact::Signal getSignal() // function no inputs
-        {
-            return signal_ * amplitude_ * envelope_;
-        }
+        tact::Signal getSignal();
 
         // declare public variables
         int name_;

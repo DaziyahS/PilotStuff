@@ -1,21 +1,26 @@
 // local includes
-#include "Chord.hpp"
+#include <Chord.hpp>
 
 // chord struct declaration
 Chord::Chord(std::string name, int duration, int amplitude, bool isSimultaneous)
 {
+    // std::cout << "creating chord" << std::endl;
+    // this list always exists
+
+    signal_list = {"a_minor_n1", "a_major_n1", "b_minor_n1", "b_major_n1", "c_minor_n2", "c_major_n2", "d_minor_n2", "d_major_n2", "e_minor_n2", "e_major_n2", "f_minor_n2", "f_major_n2", "g_minor_n2", "g_major_n2"};
+
     // variables based on given
     name_ = name;
     duration_ = duration;
     amplitude_ = amplitude;
     isSimultaneous_ = isSimultaneous;
-    // things needed for internal function
-    tact::Sequence finalSignal;
-    // declaration of function
-    std::vector<tact::Signal> playValues();
+    createNotes();
+}
 
-    // if Simultaneous
-    if(isSimultaneous)
+// determine the note values using the local variables in Chord::Chord
+void Chord::createNotes(){
+        // if Simultaneous
+    if(isSimultaneous_)
     {
         // determine the envelope for duration
         switch(duration_)
@@ -29,6 +34,10 @@ Chord::Chord(std::string name, int duration, int amplitude, bool isSimultaneous)
             case 2:
                 envelope = tact::ASR(0.3, 2.4, 0.6); // total time 3.3 s
                 break;
+            default: // should never occur
+                envelope = tact::ASR(0, 0.9, 0); // total time 0.9 s
+                break;
+
         }
         // determine the magnitude of the amplitude
         switch(amplitude_)
@@ -62,6 +71,9 @@ Chord::Chord(std::string name, int duration, int amplitude, bool isSimultaneous)
             case 2:
                 envelope = tact::ASR(0.1, 0.8, 0.2); // total time 1.1 s
                 break;
+            default: // should never occur
+                envelope = tact::ASR(0, 0.9, 0); // total time 0.9 s
+                break;
         }
          // determine the magnitude of the amplitude
         switch(amplitude_)
@@ -89,6 +101,7 @@ Chord::Chord(std::string name, int duration, int amplitude, bool isSimultaneous)
         Note note3(a_minor_n1[2], sigAmp, envelope);
         isMajor_ = a_minor_n1[3]; // determine if it is a major chord
         notes_ = {note1, note2, note3}; 
+        std::cout << "we in a minor rn" << std::endl;
     } 
     else if (name_.compare("a_major_n1") == 0) // if name given is a_major_n1
     {
@@ -194,17 +207,41 @@ Chord::Chord(std::string name, int duration, int amplitude, bool isSimultaneous)
         isMajor_ = g_major_n2[3]; // determine if it is a major chord
         notes_ = {note1, note2, note3}; 
     }  
-
-    // create a function to play the values
-    std::vector<tact::Signal> playValues();
+    else
     {
-        if(isSimultaneous_)
-        {
+        // do nothing?
+        Note note1(0, 1, tact::Envelope(0.1)); // .1 seconds of nothing
+        Note note2(0, 1, tact::Envelope(0.1)); // .1 seconds of nothing
+        Note note3(0, 1, tact::Envelope(0.1)); // .1 seconds of nothing
+        notes_ = {note1, note2, note3};
 
-        }
-        else
-        {
-            finalSignal = note1.getSignal() << note2 << note3;
-        }
     }
+    std::cout << "current note is: " << name_ << " amp is " << sigAmp << std::endl;
+}
+
+// determine the signals for each channel
+std::vector<tact::Signal> Chord::playValues()
+{
+    createNotes(); // recreate the current note
+    std::vector<tact::Signal> channel_sigs;
+    if(isSimultaneous_)
+    {
+        std::cout << "we inside a simulation" << std::endl;
+        channel1_sig = notes_[0].getSignal();
+        channel2_sig = notes_[1].getSignal();
+        channel3_sig = notes_[2].getSignal();
+    }
+    else
+    {
+        
+        std::cout << "we inside a function" << std::endl;
+        finalSignal = notes_[0].getSignal() << notes_[1].getSignal() << notes_[2].getSignal();
+        channel1_sig = finalSignal;
+        channel2_sig = finalSignal;
+        channel3_sig = finalSignal;
+    }
+    // what's the final vector
+    channel_sigs = {channel1_sig, channel2_sig, channel3_sig};
+    std::cout << "made it out the gutters" << std::endl;
+    return channel_sigs;
 }

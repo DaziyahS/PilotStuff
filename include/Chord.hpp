@@ -12,8 +12,9 @@ struct Chord
 {
     public:
         // declare the constructor for the chord
-        Chord(std::string name, int duration, int amplitude, bool isSimultaneous);
-
+        Chord(std::string name = "a_minor_n1", int duration = 0, int amplitude = 0, bool isSimultaneous = false);
+        // defined a default chord because need for when I generically declare it
+        
         // declare public variables
         std::string name_; // name of the note
         int duration_;
@@ -24,7 +25,18 @@ struct Chord
         tact::Signal envelope;
         double sigAmp;
         bool isMajor_; // if 1 then it is major
- 
+        // std::vector<Chord> chordList;
+        // Note note1, note2, note3; // may be unnecessary
+        tact::Sequence finalSignal;
+        tact::Signal channel1_sig, channel2_sig, channel3_sig;
+        // std::vector<tact::Signal> channel_sigs;
+
+        std::vector<std::string> signal_list;
+
+        // create a function to play the values
+        std::vector<tact::Signal> playValues();
+
+        void createNotes();
 
     private:
         // define the chords based on numbers and whether it is major
@@ -43,4 +55,9 @@ struct Chord
         std::vector<int> f_major_n2 = {10, 14, 18, 1};
         std::vector<int> g_minor_n2 = {12, 15, 20, 0};
         std::vector<int> g_major_n2 = {12, 16, 20, 1};
+
+        // predefine the chords list
+        // what's their names
+        
+
 };

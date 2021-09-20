@@ -26,34 +26,40 @@ FetchContent_Declare(syntacts GIT_REPOSITORY https://github.com/mahilab/Syntacts
 FetchContent_MakeAvailable(syntacts)
 
 # create an executable from personal_gui.cpp and link it to wanted libraries
-add_executable(myGuiLyfe personal_gui.cpp)
+add_executable(myGuiLyfe src/personal_gui.cpp)
 target_link_libraries(myGuiLyfe syntacts)
 target_link_libraries(myGuiLyfe mahi::util)
 target_link_libraries(myGuiLyfe mahi::gui)
 
 # create an executable from main.cpp and link it to wanted libraries
-add_executable(myApp main.cpp)
+add_executable(myApp src/main.cpp)
 target_link_libraries(myApp syntacts)
 target_link_libraries(myApp mahi::util)
 target_link_libraries(myApp mahi::gui)
 
 # create an executable from pilot1_sequence.cpp and link it to wanted libraries
-add_executable(seq1 pilot1_sequence.cpp)
+add_executable(seq1 src/pilot1_sequence.cpp)
 target_link_libraries(seq1 syntacts)
 target_link_libraries(seq1 mahi::util)
 target_link_libraries(seq1 mahi::gui)
 
 # create an executable from pilot1_simultaneous.cpp and link it to wanted libraries
-add_executable(sim1 pilot1_simultaneous.cpp)
+add_executable(sim1 src/pilot1_simultaneous.cpp)
 target_link_libraries(sim1 syntacts)
 target_link_libraries(sim1 mahi::util)
 target_link_libraries(sim1 mahi::gui)
 
 # create an executable from pilot2_twosignals.cpp and link it to wanted libraries
-add_executable(twosig pilot2_twosignals.cpp)
+add_executable(twosig src/pilot2_twosignals.cpp src/Chord.cpp src/Note.cpp)
 target_link_libraries(twosig syntacts)
 target_link_libraries(twosig mahi::util)
 target_link_libraries(twosig mahi::gui)
+
+# create an executable from pilot2_twosignals.cpp and link it to wanted libraries
+add_executable(seqsim src/pilot2_seqsim.cpp src/Chord.cpp src/Note.cpp)
+target_link_libraries(seqsim syntacts)
+target_link_libraries(seqsim mahi::util)
+target_link_libraries(seqsim mahi::gui)
 
 # # create an executable from main.cpp and link it to wanted libraries
 # add_executable(notes notes_info.cpp)
