@@ -20,6 +20,8 @@ struct Chord
         int duration_;
         bool isSimultaneous_; // holds info of which type of sequence
         bool isMajor_; // if 1 then it is major
+        tact::Signal envelope;
+
     private:
         // define the chords based on numbers and whether it is major
         std::vector<int> a_minor_n1 = {1, 5, 9, 0};
