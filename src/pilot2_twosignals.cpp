@@ -37,6 +37,12 @@ int botTact = 6;
 int leftTact = 0;
 int rightTact = 2;
 
+// trying to figure out how to save to an excel document
+std::string saveSubject; // experiment details, allows me to customize
+std::ofstream file_name; // this holds the trial information
+
+// std::string filepath;
+// mahi::util::Timestamp wherePut;
 
 class MyGui : public Application
 {
@@ -49,8 +55,7 @@ public:
     Application(windowWidth, windowHeight, my_title, 0),
     chordNew1(),
     chordNew2(),
-    channelSignals(3),
-    data(11)
+    channelSignals(3)
     {
         s.open(deviceNdx); // , tact::API::MME); // opens session with the application
         // keep in mind, if use device name must also use the API
@@ -58,8 +63,14 @@ public:
         ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_ViewportsEnable;
         set_background(Cyans::Teal); //background_color = Grays::Black; 
         // anything that does things should be in the constructor (AKA here)
-        std::string filepath = "../../Data/" + wherePut.yyyy_mm_dd_hh_mm_ss();
-        mahi::util::csv_write_row(filepath, headers);
+        // std::string filepath = "../../Data/" + wherePut.yyyy_mm_dd_hh_mm_ss() + ".csv"; // name of data changed with time
+        // mahi::util::csv_write_row(filepath, headers);
+
+        // trying to figure out how to save to an excel document
+        file_name.open("../../Data/" + saveSubject + "_piloting.csv"); // saves the csv name for all parameters
+        file_name << "Trial" << "," << "Sus 1" << "," << "Amp 1" << "," << "Chord 1" << "," << "IsSim 1" << ","
+                  << "Sus 2" << "," << "Amp 2" << "," << "Chord 2" << "," << "IsSim 2" << "," << "Valence" << ","
+                  << "Arousal" << "," << "Notes" << std::endl; // theoretically setting up headers
      }
 
     // Define variables needed throughout the program
@@ -81,11 +92,11 @@ public:
     bool start_loop = false;  // for playing a cue multiple times
     int pause = 1; // can pause the cue at any time
     // For logging the data
-    mahi::util::Timestamp wherePut;
+    // mahi::util::Timestamp wherePut;
     std::vector<std::string> headers = {"Trial", "Sus 1", "Amp 1", "Chord 1", "IsSim 1", "Sus 2", "Amp 2", "Chord 2","IsSim 2", 
                                         "Valence", "Arousal"};   
-    std::vector<int> data; 
-    std::string filepath;
+    std::array<int, 11> data; 
+    // std::string filepath;
 
     virtual void update() override
     {
@@ -109,7 +120,7 @@ public:
 
             // determine the current signal
             currentChord1 = chordNew1.signal_list[item_current1]; // theoretically gives name needed
-
+            
             ImGui::EndCombo();
         };
         ImGui::SameLine();
@@ -133,31 +144,31 @@ public:
 
         // for sustain and delay
         static int sus [2] = {0, 0}; // this is the vector being adjusted
-        if(ImGui::SliderInt("Sustain", sus, 0, 2)){  // if use SliderInt2 will have 2 back to back same range
+        if(ImGui::SliderInt2("Sustain", sus, 0, 2)){  // if use SliderInt2 will have 2 back to back same range
             // sus is determined here, this is duration value
             std::cout << "sustain is " << sus << std::endl;
         }; 
         static int amp [2] = {0, 0}; // The value to be adjusted
-        if(ImGui::SliderInt("Intensity", amp, 0, 3)){
+        if(ImGui::SliderInt2("Intensity", amp, 0, 3)){
             // amp is determined here, this is amplitude value
         };
         /* // if I just want it to be an arrow down and would go before it
         if (ImGui::CheckboxFlags("ImGuiComboFlags_NoPreview", &flags, ImGuiComboFlags_NoPreview))
                 flags &= ~ImGuiComboFlags_NoArrowButton; // Clear the other flag, as we cannot combine both
         */
-        if(ImGui::Button("Sequential", buttonSize)){
+        if(ImGui::Button("Sequential", buttonSize/2)){
             isSim[0] = 0; // false
         };
         ImGui::SameLine();
-        if(ImGui::Button("Simultaneous", buttonSize)){
+        if(ImGui::Button("Simultaneous", buttonSize/2)){
             isSim[0] = 1; // true
         };
         ImGui::SameLine();
-        if(ImGui::Button("Sequential", buttonSize)){
+        if(ImGui::Button("Sequential", buttonSize/2)){
             isSim[1] = 0; // false
         };
         ImGui::SameLine();
-        if(ImGui::Button("Simultaneous", buttonSize)){
+        if(ImGui::Button("Simultaneous", buttonSize/2)){
             isSim[1] = 1; // true
         };
 
@@ -242,6 +253,7 @@ public:
         {
             ImGui::OpenPopup("logging_things"); // open a popup and name it for calling
             // This just needs its own space, no curlies for the if
+            // std::cout << filepath << std::endl;
         }  
         static char num[120]; // info holder 
         if(ImGui::BeginPopup("logging_things")) // if clicked essentially
@@ -257,9 +269,17 @@ public:
                 // put things here for what should happen once closed or else it will run foreverrrr
                 std::string notes_taken(num); // gets rid of null characters
                 data = {trial_num, sus[0], amp[0], item_current1, isSim[0], sus[1], amp[1], item_current2, isSim[1], val, arous};
-                csv_append_rows(filepath, data);
+                // excel
+                file_name << trial_num << ",";
+                file_name << sus[0] << "," << amp[0] << "," <<  item_current1 << "," << isSim[0] << ",";
+                file_name << sus[1] << "," << amp[1] << "," <<  item_current2 << "," << isSim[1] << ",";
+                file_name << val << "," << arous << ",";
+                file_name << notes_taken << std::endl;
+                // csv_append_row(filepath, data);
                 LOG(Info) << notes_taken;
+                // LOG(Info) << filepath;
                 trial_num++;
+                // std::cout << "inside popup filepath is: " << filepath << "."  << std::endl;
             }
             ImGui::EndPopup();            
         }
@@ -272,6 +292,10 @@ public:
 
 // actually open GUI
 int main() {
+    // std::string filepath = "../../Data/" + wherePut.yyyy_mm_dd_hh_mm_ss() + ".csv"; // name of data changed with time
+    std::cout << "What is today's date followed by a letter of the alphabet?" << std::endl;
+    std::cin >> saveSubject;
+
     MyGui my_gui;
     my_gui.run();
     return 0;
