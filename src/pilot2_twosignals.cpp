@@ -158,22 +158,18 @@ public:
         */
         if(ImGui::Button("Sequential 1", buttonSize/2)){
             isSim[0] = false; // false
-            std::cout << "on seq1" << std::endl;
         };
         ImGui::SameLine();
         if(ImGui::Button("Simultaneous 1", buttonSize/2)){
             isSim[0] = true; // true
-            std::cout << "on sim1" << std::endl;
         };
         ImGui::SameLine();
         if(ImGui::Button("Sequential 2", buttonSize/2)){
             isSim[1] = false; // false
-            std::cout << "on seq2" << std::endl;
         };
         ImGui::SameLine();
         if(ImGui::Button("Simultaneous 2", buttonSize/2)){
             isSim[1] = true; // true
-            std::cout << "on sim2" << std::endl;
         };
 
         // for play, loop, pause, save
@@ -194,8 +190,6 @@ public:
             s.play(rightTact, channelSignals[2]); 
             // sleep(finalSignal.length()); // sleep makes sure you cannot play another cue before that cue is done (in theory)
             // sleep is a blocking function
-
-            std::cout << channelSignals[0].length() << " s for playing" << std::endl;
             }; 
         ImGui::SameLine();
         if(ImGui::Button("Play Note 2", buttonSize)){
@@ -215,8 +209,6 @@ public:
             s.play(rightTact, channelSignals[2]); 
             // sleep(finalSignal.length()); // sleep makes sure you cannot play another cue before that cue is done (in theory)
             // sleep is a blocking function
-
-            std::cout << channelSignals[0].length() << " s for playing" << std::endl;
             }; 
       
         if(ImGui::Button("Pause", buttonSize)){
@@ -257,7 +249,6 @@ public:
         {
             ImGui::OpenPopup("logging_things"); // open a popup and name it for calling
             // This just needs its own space, no curlies for the if
-            // std::cout << filepath << std::endl;
 
             // need to update information that was used even if did not press play
             chordNew1 = Chord(currentChord1, sus[0], amp[0], isSim[0]);
@@ -286,9 +277,7 @@ public:
                 // csv_append_row(filepath, data);
                 LOG(Info) << notes_taken;
                 // LOG(Info) << filepath;
-                std::cout << "isMajor is" << chordNew1.getMajor() << "for 1 and " << chordNew2.getMajor() << "for 2" << std::endl;
                 trial_num++;
-                // std::cout << "inside popup filepath is: " << filepath << "."  << std::endl;
             }
             ImGui::EndPopup();            
         }
