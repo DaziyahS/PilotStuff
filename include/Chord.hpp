@@ -37,6 +37,7 @@ struct Chord
         std::vector<tact::Signal> playValues();
 
         void createNotes();
+        bool Chord::getMajor();
 
     private:
         // define the chords based on numbers and whether it is major

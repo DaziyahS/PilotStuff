@@ -69,8 +69,8 @@ public:
 
         // trying to figure out how to save to an excel document
         file_name.open("../../Data/" + saveSubject + "_piloting.csv"); // saves the csv name for all parameters
-        file_name << "Trial" << "," << "Sus 1" << "," << "Amp 1" << "," << "Chord 1" << "," << "IsSim 1" << ","
-                  << "Sus 2" << "," << "Amp 2" << "," << "Chord 2" << "," << "IsSim 2" << "," << "Valence" << ","
+        file_name << "Trial" << "," << "Chord 1" << "," << "Sus 1" << "," << "Amp 1" << "," << "IsSim 1" << "," << "IsMajor" << ","
+                  << "Chord 2"<< "," << "Sus 2" << "," << "Amp 2" << "," << "IsSim 2" << "," << "IsMajor" << "," << "Valence" << ","
                   << "Arousal" << "," << "Notes" << std::endl; // theoretically setting up headers
      }
 
@@ -147,7 +147,6 @@ public:
         static int sus [2] = {0, 0}; // this is the vector being adjusted
         if(ImGui::SliderInt2("Sustain", sus, 0, 2)){  // if use SliderInt2 will have 2 back to back same range
             // sus is determined here, this is duration value
-            std::cout << "sustain is " << sus << std::endl;
         }; 
         static int amp [2] = {0, 0}; // The value to be adjusted
         if(ImGui::SliderInt2("Intensity", amp, 0, 3)){
@@ -259,6 +258,10 @@ public:
             ImGui::OpenPopup("logging_things"); // open a popup and name it for calling
             // This just needs its own space, no curlies for the if
             // std::cout << filepath << std::endl;
+
+            // need to update information that was used even if did not press play
+            chordNew1 = Chord(currentChord1, sus[0], amp[0], isSim[0]);
+            chordNew2 = Chord(currentChord2, sus[1], amp[1], isSim[1]);
         }  
         static char num[120]; // info holder 
         if(ImGui::BeginPopup("logging_things")) // if clicked essentially
@@ -276,13 +279,14 @@ public:
                 data = {trial_num, sus[0], amp[0], item_current1, isSim[0], sus[1], amp[1], item_current2, isSim[1], val, arous};
                 // excel
                 file_name << trial_num << ",";
-                file_name << sus[0] << "," << amp[0] << "," <<  item_current1 << "," << isSim[0] << ",";
-                file_name << sus[1] << "," << amp[1] << "," <<  item_current2 << "," << isSim[1] << ",";
+                file_name <<  item_current1 << "," << sus[0] << "," << amp[0] << "," << isSim[0] << "," << chordNew1.getMajor() << ",";
+                file_name <<  item_current2 << "," << sus[1] << "," << amp[1] << "," << isSim[1] << "," << chordNew2.getMajor() << ",";
                 file_name << val << "," << arous << ",";
                 file_name << notes_taken << std::endl;
                 // csv_append_row(filepath, data);
                 LOG(Info) << notes_taken;
                 // LOG(Info) << filepath;
+                std::cout << "isMajor is" << chordNew1.getMajor() << "for 1 and " << chordNew2.getMajor() << "for 2" << std::endl;
                 trial_num++;
                 // std::cout << "inside popup filepath is: " << filepath << "."  << std::endl;
             }
