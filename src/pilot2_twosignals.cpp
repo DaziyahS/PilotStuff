@@ -30,7 +30,7 @@ int windowHeight = 1000;
 std::string my_title= "Play GUI";
 ImVec2 buttonSize = ImVec2(400, 65);  // Size of buttons on GUI
 // std::string deviceNdx = "Speakers (USB Sound Device)"; // Put my device name or number, is for at home name
-int deviceNdx = 5;
+int deviceNdx = 6;
 // tactors of interest
 int topTact = 4;
 int botTact = 6;
@@ -55,6 +55,7 @@ public:
     Application(windowWidth, windowHeight, my_title, 0),
     chordNew1(),
     chordNew2(),
+    isSim(2),
     channelSignals(3)
     {
         s.open(deviceNdx); // , tact::API::MME); // opens session with the application
@@ -156,20 +157,24 @@ public:
         if (ImGui::CheckboxFlags("ImGuiComboFlags_NoPreview", &flags, ImGuiComboFlags_NoPreview))
                 flags &= ~ImGuiComboFlags_NoArrowButton; // Clear the other flag, as we cannot combine both
         */
-        if(ImGui::Button("Sequential", buttonSize/2)){
-            isSim[0] = 0; // false
+        if(ImGui::Button("Sequential 1", buttonSize/2)){
+            isSim[0] = false; // false
+            std::cout << "on seq1" << std::endl;
         };
         ImGui::SameLine();
-        if(ImGui::Button("Simultaneous", buttonSize/2)){
-            isSim[0] = 1; // true
+        if(ImGui::Button("Simultaneous 1", buttonSize/2)){
+            isSim[0] = true; // true
+            std::cout << "on sim1" << std::endl;
         };
         ImGui::SameLine();
-        if(ImGui::Button("Sequential", buttonSize/2)){
-            isSim[1] = 0; // false
+        if(ImGui::Button("Sequential 2", buttonSize/2)){
+            isSim[1] = false; // false
+            std::cout << "on seq2" << std::endl;
         };
         ImGui::SameLine();
-        if(ImGui::Button("Simultaneous", buttonSize/2)){
-            isSim[1] = 1; // true
+        if(ImGui::Button("Simultaneous 2", buttonSize/2)){
+            isSim[1] = true; // true
+            std::cout << "on sim2" << std::endl;
         };
 
         // for play, loop, pause, save
