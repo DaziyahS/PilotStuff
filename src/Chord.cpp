@@ -4,9 +4,7 @@
 // chord struct declaration
 Chord::Chord(std::string name, int duration, int amplitude, bool isSimultaneous)
 {
-    // std::cout << "creating chord" << std::endl;
     // this list always exists
-
     signal_list = {"a_minor_n1", "a_major_n1", "b_minor_n1", "b_major_n1", "c_minor_n2", "c_major_n2", "d_minor_n2", "d_major_n2", "e_minor_n2", "e_major_n2", "f_minor_n2", "f_major_n2", "g_minor_n2", "g_major_n2"};
 
     // variables based on given
@@ -102,7 +100,6 @@ void Chord::createNotes(){
         Note note3(a_minor_n1[2], sigAmp, envelope);
         isMajor_ = a_minor_n1[3]; // determine if it is a major chord
         notes_ = {note1, note2, note3}; 
-        std::cout << "we in a minor rn" << std::endl;
     } 
     else if (name_.compare("a_major_n1") == 0) // if name given is a_major_n1
     {
@@ -206,7 +203,6 @@ void Chord::createNotes(){
         Note note2(g_major_n2[1], sigAmp, envelope);
         Note note3(g_major_n2[2], sigAmp, envelope);
         isMajor_ = g_major_n2[3]; // determine if it is a major chord
-        std::cout << "inside G Major, major is" << isMajor_ << std::endl;
         notes_ = {note1, note2, note3}; 
     }  
     else
@@ -218,7 +214,6 @@ void Chord::createNotes(){
         notes_ = {note1, note2, note3};
 
     }
-    std::cout << "current note is: " << name_ << " amp is " << sigAmp << std::endl;
 }
 
 // determine the signals for each channel
@@ -228,15 +223,12 @@ std::vector<tact::Signal> Chord::playValues()
     std::vector<tact::Signal> channel_sigs;
     if(isSimultaneous_)
     {
-        std::cout << "we inside a simulation" << std::endl;
         channel1_sig = notes_[0].getSignal();
         channel2_sig = notes_[1].getSignal();
         channel3_sig = notes_[2].getSignal();
     }
     else
     {
-        
-        std::cout << "we inside a function" << std::endl;
         finalSignal = notes_[0].getSignal() << notes_[1].getSignal() << notes_[2].getSignal();
         channel1_sig = finalSignal;
         channel2_sig = finalSignal;
@@ -244,14 +236,12 @@ std::vector<tact::Signal> Chord::playValues()
     }
     // what's the final vector
     channel_sigs = {channel1_sig, channel2_sig, channel3_sig};
-    std::cout << "made it out the gutters" << std::endl;
     return channel_sigs;
 }
 
 // find out if it is a major chord
 bool Chord::getMajor()
-{
-    std::cout << "name is " << name_ << std::endl; 
+{ 
     // determine the notes themselves
     if (name_.compare("a_minor_n1") == 0) // if name given is a_minor_n1
     {
