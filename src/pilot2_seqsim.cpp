@@ -33,6 +33,10 @@ int botTact = 6;
 int leftTact = 0;
 int rightTact = 2;
 
+// trying to figure out how to save to an excel document
+std::string saveSubject; // experiment details, allows me to customize
+std::ofstream file_name; // this holds the trial information
+
 
 class MyGui : public Application
 {
@@ -51,6 +55,11 @@ public:
         // something the GUI needs *shrugs*
         ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_ViewportsEnable;
         set_background(Cyans::Teal); //background_color = Grays::Black; 
+
+         // trying to figure out how to save to an excel document
+        file_name.open("../../Data/" + saveSubject + "_piloting.csv"); // saves the csv name for all parameters
+        file_name << "Trial" << "," << "Chord" << "," << "Sus" << "," << "Amp" << "," << "IsSim" << "," << "IsMajor" << ","
+                  << "Valence" << "," << "Arousal" << "," << "Notes" << std::endl; // theoretically setting up headers
      }
 
     // Define variables needed throughout the program
@@ -102,7 +111,6 @@ public:
         static int sus = 0; // I think this is the vector being adjusted
         if(ImGui::SliderInt("Sustain", &sus, 0, 2)){  // if use SliderInt2 will have 2 back to back same range
             // sus is determined here, this is duration value
-            std::cout << "sustain is " << sus << std::endl;
         }; 
         static int amp = 0; // The value to be adjusted
         if(ImGui::SliderInt("Intensity", &amp, 0, 3)){
@@ -139,7 +147,6 @@ public:
             // sleep(finalSignal.length()); // sleep makes sure you cannot play another cue before that cue is done (in theory)
             // sleep is a blocking function
 
-            std::cout << channelSignals[0].length() << " s for playing" << std::endl;
             }; 
         ImGui::SameLine();
         if(ImGui::Button("Loop", buttonSize)){
@@ -150,8 +157,6 @@ public:
             chordNew = Chord(currentChord, sus, amp, isSim);
             channelSignals = chordNew.playValues(); // get the values of the signal
 
-            std::cout << "Pause value is " << pause << std::endl;
-            std::cout << channelSignals[0].length() << " s for playing" << std::endl;
             start_loop = true;
         }; 
         ImGui::SameLine();        
@@ -227,7 +232,6 @@ public:
                 // put things here for what should happen once closed or else it will run foreverrrr
                 std::string predone(buf); // gets rid of null characters
                 sigName = predone + ".sig"; // now set the name to what we want
-                std::cout << sigName << std::endl;
 
                 // determine the signal
                 chordNew = Chord(currentChord, sus, amp, isSim);
@@ -249,6 +253,9 @@ public:
         {
             ImGui::OpenPopup("logging_things"); // open a popup and name it for calling
             // This just needs its own space, no curlies for the if
+
+            // need to update information that was used even if did not press play
+            chordNew = Chord(currentChord, sus, amp, isSim);
         }  
         static char num[120]; // info holder 
         if(ImGui::BeginPopup("logging_things")) // if clicked essentially
@@ -264,7 +271,14 @@ public:
                 // put things here for what should happen once closed or else it will run foreverrrr
                 std::string notes_taken(num); // gets rid of null characters
                 // LOG(Info) << "Notes for trial " << trial_num << " are: " + notes_taken + " for the " << item_current << " chord with a hold of " << sus << " and amplitude of " << amp << "."; // now log this information
-                LOG(Info) << trial_num << "," << item_current << "," << sus << "," << amp << "," << val << "," << arous << "," + notes_taken;
+                // LOG(Info) << trial_num << "," << item_current << "," << sus << "," << amp << "," << val << "," << arous << "," + notes_taken;
+                
+                // excel
+                file_name << trial_num << ",";
+                file_name <<  item_current << "," << sus << "," << amp << "," << isSim << "," << chordNew.getMajor() << ",";
+                file_name << val << "," << arous << ",";
+                file_name << notes_taken << std::endl;
+                
                 trial_num++;
             }
             ImGui::EndPopup();            
@@ -278,6 +292,9 @@ public:
 
 // actually open GUI
 int main() {
+    std::cout << "What is today's date followed by a letter of the alphabet?" << std::endl;
+    std::cin >> saveSubject;
+
     MyGui my_gui;
     my_gui.run();
     return 0;
