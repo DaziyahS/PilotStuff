@@ -275,7 +275,7 @@ public:
                 file_name << val << "," << arous << ",";
                 file_name << notes_taken << std::endl;
                 // csv_append_row(filepath, data);
-                LOG(Info) << notes_taken;
+                // LOG(Info) << notes_taken;
                 // LOG(Info) << filepath;
                 trial_num++;
             }

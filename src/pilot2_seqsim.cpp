@@ -26,7 +26,7 @@ int windowHeight = 1000;
 std::string my_title= "Play GUI";
 ImVec2 buttonSize = ImVec2(400, 65);  // Size of buttons on GUI
 // std::string deviceNdx = "Speakers (USB Sound Device)"; // Put my device name or number, is for at home name
-int deviceNdx = 5;
+int deviceNdx = 6;
 // tactors of interest
 int topTact = 4;
 int botTact = 6;
