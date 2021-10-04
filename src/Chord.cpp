@@ -5,7 +5,9 @@
 Chord::Chord(std::string name, int duration, int amplitude, bool isSimultaneous)
 {
     // this list always exists
-    signal_list = {"a_minor_n1", "a_major_n1", "b_minor_n1", "b_major_n1", "c_minor_n2", "c_major_n2", "d_minor_n2", "d_major_n2", "e_minor_n2", "e_major_n2", "f_minor_n2", "f_major_n2", "g_minor_n2", "g_major_n2"};
+    signal_list = {"a_minor_n1", "a_major_n1", "b_minor_n1", "b_major_n1", "c_minor_n2", "c_major_n2", "d_minor_n2", "d_major_n2",
+                    "e_minor_n2", "e_major_n2", "f_minor_n2", "f_major_n2", "g_minor_n2", "g_major_n2", "d_minor_n3", "d_major_n3",
+                    "e_minor_n3", "e_major_n3"};
 
     // variables based on given
     name_ = name;
@@ -204,7 +206,39 @@ void Chord::createNotes(){
         Note note3(g_major_n2[2], sigAmp, envelope);
         isMajor_ = g_major_n2[3]; // determine if it is a major chord
         notes_ = {note1, note2, note3}; 
+    } 
+     else if (name_.compare("d_minor_n3") == 0) // if name given is d_minor_n2
+    {
+        Note note1(d_minor_n3[0], sigAmp, envelope);
+        Note note2(d_minor_n3[1], sigAmp, envelope);
+        Note note3(d_minor_n3[2], sigAmp, envelope);
+        isMajor_ = d_minor_n3[3]; // determine if it is a major chord
+        notes_ = {note1, note2, note3}; 
     }  
+    else if (name_.compare("d_major_n3") == 0) // if name given is d_major_n2
+    {
+        Note note1(d_major_n3[0], sigAmp, envelope);
+        Note note2(d_major_n3[1], sigAmp, envelope);
+        Note note3(d_major_n3[2], sigAmp, envelope);
+        isMajor_ = d_major_n3[3]; // determine if it is a major chord
+        notes_ = {note1, note2, note3}; 
+    }  
+    else if (name_.compare("e_minor_n3") == 0) // if name given is e_minor_n2
+    {
+        Note note1(e_minor_n3[0], sigAmp, envelope);
+        Note note2(e_minor_n3[1], sigAmp, envelope);
+        Note note3(e_minor_n3[2], sigAmp, envelope);
+        isMajor_ = e_minor_n3[3]; // determine if it is a major chord
+        notes_ = {note1, note2, note3}; 
+    }  
+    else if (name_.compare("e_major_n3") == 0) // if name given is e_major_n2
+    {
+        Note note1(e_major_n3[0], sigAmp, envelope);
+        Note note2(e_major_n3[1], sigAmp, envelope);
+        Note note3(e_major_n3[2], sigAmp, envelope);
+        isMajor_ = e_major_n3[3]; // determine if it is a major chord
+        notes_ = {note1, note2, note3}; 
+    }   
     else
     {
         // do nothing?

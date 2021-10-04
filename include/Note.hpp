@@ -49,6 +49,6 @@ struct Note
         double g_note3 = 196;
         double g_snote3 = 207.65; // g sharp and a flat
         double a_note3 = 220;
-        double a_snote2 = 233.08; // a sharp and b flat
-        double b_note2 = 246.95;
+        double a_snote3 = 233.08; // a sharp and b flat
+        double b_note3 = 246.95;
 };
