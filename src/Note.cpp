@@ -70,6 +70,33 @@ Note::Note(int name, double amplitude, tact::Signal envelope) :
         case 20:
             signal_ = tact::Sine(d_note3);
             break;
+            break;
+        case 21:
+            signal_ = tact::Sine(d_snote3);
+            break;
+        case 22:
+            signal_ = tact::Sine(e_note3);
+            break;
+        case 23:
+            signal_ = tact::Sine(f_note3);
+            break;
+        case 24:
+            signal_ = tact::Sine(f_snote3);
+            break;
+        case 25:
+            signal_ = tact::Sine(g_note3);
+            break;
+        case 26:
+            signal_ = tact::Sine(g_snote3);
+            break;
+        case 27:
+            signal_ = tact::Sine(a_note3);
+            break;
+        case 28:
+            signal_ = tact::Sine(a_snote3);
+            break;
+        case 29:
+            signal_ = tact::Sine(b_note3);
         default: // something is not right, play nothing
             signal_ = tact::Sine(0);
             break;
