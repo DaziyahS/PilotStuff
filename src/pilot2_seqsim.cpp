@@ -86,9 +86,7 @@ public:
         ImGui::Begin("Playing GUI");
 
         // for preset, a list of the chords
-        const char* items[] = { "A Minor 1", "A Major 1", "B Minor 1", "B Major 1", "C Minor 2", "C Major 2", 
-                                "D Minor 2", "D Major 2", "E Minor 2", "E Major 2", "F Minor 2", "F Major 2",
-                                "G Minor 2", "G Major 2"}; // chord names
+        const char* items[] = {"D Minor 3", "D Major 3", "E Minor 3", "E Major 3"}; // chord names
         static int item_current = 0; // Starts at first item in the list
         const char* combo_label = items[item_current]; // Gives the preview before anything is played
         if(ImGui::BeginCombo("Presets", combo_label)){ // no flags
@@ -102,7 +100,7 @@ public:
             }
 
             // determine the current signal
-            currentChord = chordNew.signal_list[item_current]; // theoretically gives name needed
+            currentChord = chordNew.signal_list[item_current+14]; // theoretically gives name needed
 
             ImGui::EndCombo();
         };
